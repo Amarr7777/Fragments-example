@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun mainScreen() {
-    var showFormInputs by remember { mutableStateOf(true) }
+    var currentFormInput by remember { mutableStateOf(1) }
 
     Box(
         modifier = Modifier
@@ -57,17 +57,19 @@ fun mainScreen() {
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (showFormInputs) {
-                formInputs()
-            } else {
-                formInputs2()
+            when (currentFormInput) {
+                1 -> formInputs()
+                2 -> formInputs2()
+                3 -> formInputs3()
             }
             Row(horizontalArrangement = Arrangement.SpaceEvenly) {
-                if (showFormInputs) {
-                    next(onNextClicked = { showFormInputs = false })
+                if (currentFormInput == 1) {
+                    next(onNextClicked = { currentFormInput = 2 })
+                } else if (currentFormInput == 2) {
+                    back(onNextClicked = { currentFormInput = 1 })
+                    next(onNextClicked = { currentFormInput = 3 })
                 } else {
-                    back(onNextClicked = { showFormInputs = true })
-                    next(onNextClicked = { showFormInputs = false })
+                    back(onNextClicked = { currentFormInput = 2 })
                 }
             }
         }
@@ -94,14 +96,26 @@ fun formInputs() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun formInputs2() {
+fun formInputs3() {
     Column {
         Text(text = "Course", color = Color.White)
         var course by remember { mutableStateOf("") }
         TextField(value = course, onValueChange = { course = it }, modifier = Modifier.padding(0.dp, 10.dp))
-        Text(text = "semester", color = Color.White)
+        Text(text = "Semester", color = Color.White)
         var semester by remember { mutableStateOf("") }
         TextField(value = semester, onValueChange = { semester = it }, modifier = Modifier.padding(0.dp, 10.dp))
+    }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun formInputs2() {
+    Column {
+        Text(text = "Age", color = Color.White)
+        var age by remember { mutableStateOf("") }
+        TextField(value = age, onValueChange = { age = it }, modifier = Modifier.padding(0.dp, 10.dp))
+        Text(text = "Sex", color = Color.White)
+        var sex by remember { mutableStateOf("") }
+        TextField(value = sex, onValueChange = { sex = it }, modifier = Modifier.padding(0.dp, 10.dp))
     }
 }
 
